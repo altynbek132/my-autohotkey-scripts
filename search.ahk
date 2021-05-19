@@ -37,11 +37,11 @@ OpenURL(url)
         Run, %url%%aStr%
 }
 
-#IfWinNotActive ahk_exe chrome.exe
 !w::  ; YaTranslate with Win+Ctrl+s
 OpenURL("https://translate.google.com/?sl=en&tl=ru&text=")
 return
 
+#IfWinNotActive ahk_exe chrome.exe
 !q::  ; Search in Google with Win+Ctrl+g
 OpenUrl("https://www.google.com/search?q=")
 return
