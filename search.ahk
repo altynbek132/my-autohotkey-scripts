@@ -22,27 +22,48 @@ UrlUnEscape( url, flags )
     Return newUrl
 }
 
+; URL with %s in place of query
 OpenURL(url)
 {
     prevClipboard := ClipboardAll
     Clipboard =
     Send, ^c
     ClipWait
-    
+
     aStr := UrlEscape( RegExReplace(RegExReplace(Clipboard, "\r?\n", " "), "(^\s+|\s+$)"), 0x00080000 | 0x00002000 | 0x00001000)
     Clipboard := prevClipboard
-    if SubStr(aStr, 1, 8)="https://"
-    Run, %aStr%
-    else
-        Run, %url%%aStr%
+    if SubStr(aStr, 1, 8)="https://" OR SubStr(aStr, 1, 4)="www."
+        Run, %aStr%
+    else{
+        toSearch := "%s"
+        asdf := StrReplace(url, toSearch, aStr)
+        Run, %asdf%
+    }
 }
 
-!w::  ; YaTranslate with Win+Ctrl+s
-OpenURL("https://translate.google.com/?sl=en&tl=ru&text=")
+!w::
+    OpenURL("https://translate.google.com/?sl=en&tl=ru&text=%s")
 return
 
 #IfWinNotActive ahk_exe chrome.exe
-!q::  ; Search in Google with Win+Ctrl+g
-OpenUrl("https://www.google.com/search?q=")
+!q::
+    OpenUrl("https://www.google.com/search?q=%s")
+return
+#IfWinNotActive
+
+custom := ""
+
+#IfWinNotActive ahk_exe chrome.exe
+!^q:: ; Search in Google with additional custom query
+    custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
+    OpenUrl("https://www.google.com/search?q=%s%20" . custom)
+return
+#IfWinNotActive
+
+#IfWinNotActive ahk_exe chrome.exe
+!+^q:: ; Search in Google with additional new custom query
+    InputBox, custom, "Enter additional query for future searches"
+    custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
+    OpenUrl("https://www.google.com/search?q=%s%20" . custom)
 return
 #IfWinNotActive
