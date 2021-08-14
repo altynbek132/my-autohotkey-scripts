@@ -30,19 +30,20 @@ OpenURL(url)
     Send, ^c
     ClipWait
 
-    aStr := UrlEscape( RegExReplace(RegExReplace(Clipboard, "\r?\n", " "), "(^\s+|\s+$)"), 0x00080000 | 0x00002000 | 0x00001000)
-    Clipboard := prevClipboard
-    if SubStr(aStr, 1, 8)="https://" OR SubStr(aStr, 1, 4)="www."
-        Run, %aStr%
-    else{
-        toSearch := "%s"
-        asdf := StrReplace(url, toSearch, aStr)
-        Run, %asdf%
+    query := Trim(Clipboard)
+    if SubStr(query, 1, 4)="http" OR SubStr(query, 1, 3)="www" {
+        Run, %query%
+        return
     }
+    escapedQuery := UrlEscape( RegExReplace(RegExReplace(query, "\r?\n", " "), "(^\s+|\s+$)"), 0x00080000 | 0x00002000 | 0x00001000)
+    toSearch := "%s"
+    asdf := StrReplace(url, toSearch, escapedQuery)
+    Run, %asdf%
+    Clipboard := prevClipboard
 }
 
 !w::
-    OpenURL("https://translate.google.com/?sl=en&tl=ru&text=%s")
+    OpenURL("https://translate.yandex.com/?lang=ru-en&text=%s")
 return
 
 #IfWinNotActive ahk_exe chrome.exe
@@ -53,17 +54,13 @@ return
 
 custom := ""
 
-#IfWinNotActive ahk_exe chrome.exe
 !^q:: ; Search in Google with additional custom query
     custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
     OpenUrl("https://www.google.com/search?q=%s%20" . custom)
 return
-#IfWinNotActive
 
-#IfWinNotActive ahk_exe chrome.exe
 !+^q:: ; Search in Google with additional new custom query
     InputBox, custom, "Enter additional query for future searches"
     custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
     OpenUrl("https://www.google.com/search?q=%s%20" . custom)
 return
-#IfWinNotActive
