@@ -42,25 +42,25 @@ OpenURL(url)
     Clipboard := prevClipboard
 }
 
-!w::
-    OpenURL("https://translate.yandex.com/?lang=ru-en&text=%s")
+#w::
+    OpenURL("https://translate.yandex.com/?&text=%s")
 return
 
-#IfWinNotActive ahk_exe chrome.exe
-!q::
+#q::
     OpenUrl("https://www.google.com/search?q=%s")
 return
-#IfWinNotActive
 
 custom := ""
 
-!^q:: ; Search in Google with additional custom query
-    custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
-    OpenUrl("https://www.google.com/search?q=%s%20" . custom)
+#^q:: ; Search in Google with additional custom query
+    copy := custom
+    copy := UrlEscape( RegExReplace(RegExReplace(copy, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
+    OpenUrl("https://www.google.com/search?q=%s%20" . copy)
 return
 
-!+^q:: ; Search in Google with additional new custom query
+#+^q:: ; Search in Google with additional new custom query
     InputBox, custom, "Enter additional query for future searches"
-    custom := UrlEscape( RegExReplace(RegExReplace(custom, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
-    OpenUrl("https://www.google.com/search?q=%s%20" . custom)
+    copy := custom
+    copy := UrlEscape( RegExReplace(RegExReplace(copy, "\r?\n", " "), "(^\s+|\s+$)", " "), 0x00080000 | 0x00002000 | 0x00001000)
+    OpenUrl("https://www.google.com/search?q=%s%20" . copy)
 return
