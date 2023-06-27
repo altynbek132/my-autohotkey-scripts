@@ -21,7 +21,7 @@ UrlUnEscape( url, flags )
     DllCall( "shlwapi\UrlUnescapeW", Str, url, Str, newUrl, UIntP, pcche, UInt, flags )
     Return newUrl
 }
-
+ 
 ; URL with %s in place of query
 OpenURL(url)
 {
@@ -42,7 +42,7 @@ OpenURL(url)
     Clipboard := prevClipboard
 }
 
-#w::
+#+w::
     OpenURL("https://translate.yandex.com/?&text=%s")
 return
 

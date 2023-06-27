@@ -3,6 +3,7 @@
 ; By BoffinbraiN
 
 #NoEnv
+#NoTrayIcon
 #SingleInstance
 #MaxHotkeysPerInterval 120
 
