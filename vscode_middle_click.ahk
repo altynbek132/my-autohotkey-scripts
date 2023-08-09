@@ -14,8 +14,5 @@ SetWorkingDir, %A_ScriptDir%
 
 #IfWinActive ahk_exe Code.exe
     ~MButton::
-        MouseGetPos, xpos, ypos
-
-        if (ypos >= 87) {
-            SendInput,{Click}{F12}
-        }
+        SendInput,{MButton}
+        SendInput,{Control down}{Click}{Control up}
